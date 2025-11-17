@@ -1,17 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { OptionType } from 'src/constants/articleProps';
 
 type UseEnterSubmit = {
+	ref: React.RefObject<HTMLDivElement>; // Принимаем реф как пропс
 	onChange?: (option: OptionType) => void;
 	option: OptionType;
 };
 
-export const useEnterSubmit = ({ onChange, option }: UseEnterSubmit) => {
-	const optionRef = useRef<HTMLDivElement>(null);
-
+export const useEnterSubmit = ({ ref, onChange, option }: UseEnterSubmit) => {
 	useEffect(() => {
-		const optionHtml = optionRef.current;
-
+		const optionHtml = ref.current;
 		if (!optionHtml) return;
 
 		const handleEnterKeyDown = (event: KeyboardEvent) => {
@@ -22,9 +20,8 @@ export const useEnterSubmit = ({ onChange, option }: UseEnterSubmit) => {
 
 		optionHtml.addEventListener('keydown', handleEnterKeyDown);
 
-		// не забываем удалять листенеры, при размонтировании компонента
 		return () => {
 			optionHtml.removeEventListener('keydown', handleEnterKeyDown);
 		};
-	}, [onChange, option]);
+	}, [ref, onChange, option]);
 };
